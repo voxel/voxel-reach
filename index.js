@@ -1,8 +1,5 @@
 // # vim: set shiftwidth=2 tabstop=2 softtabstop=2 expandtab:
 
-var inherits = require('inherits');
-var EventEmitter = require('events').EventEmitter;
-
 module.exports = function(game, opts) {
   return new Reach(game, opts);
 }
@@ -35,8 +32,7 @@ Reach.prototype.bindEvents = function() {
       voxel_target = hit.adjacent;
     }
 
-    console.log("emitting",action,voxel_target);
-    self.emit(action, voxel_target);
+    self.game.emit(action, voxel_target);
   });
 };
 
@@ -53,4 +49,3 @@ Reach.prototype.action = function(kb_state) {
   }
 }
 
-inherits(Reach, EventEmitter);
