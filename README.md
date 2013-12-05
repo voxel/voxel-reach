@@ -18,7 +18,7 @@ reach, and send break/place events for the hit voxel.
         game.createBlock(at, 1);
     });
 
-    game.on('break', function(at) { 
+    game.on('mining', function(at) { 
       if (at)
         game.setBlock(at, 0);
     });

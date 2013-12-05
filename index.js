@@ -12,6 +12,8 @@ function Reach(game, opts) {
   this.opts = opts;
 
   this.bindEvents();
+
+  return this;
 }
 
 Reach.prototype.bindEvents = function() {
@@ -26,7 +28,7 @@ Reach.prototype.bindEvents = function() {
     }
 
     hit = self.game.raycastVoxels(game.cameraPosition(), game.cameraVector(), self.opts.reachDistance);
-    if (action == 'break') {
+    if (action == 'mining') {
       voxel_target = hit.voxel;
     } else if (action == 'place') {
       voxel_target = hit.adjacent;
@@ -38,8 +40,8 @@ Reach.prototype.bindEvents = function() {
 
 Reach.prototype.action = function(kb_state) {
   if (kb_state['fire']) {
-    // left-click = break
-    return 'break';
+    // left-click (hold) = mining
+    return 'mining';
   } else if (kb_state['firealt']) {
     // right-click = place
     return 'place';
