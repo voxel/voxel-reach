@@ -40,9 +40,6 @@ Reach.prototype.bindEvents = function() {
     }
 
     hit = self.game.raycastVoxels(game.cameraPosition(), game.cameraVector(), self.opts.reachDistance);
-    if (!hit) {
-      return;
-    }
 
     target = self.specifyTarget(hit, action);
 
