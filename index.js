@@ -65,9 +65,7 @@ Reach.prototype.bindEvents = function() {
 
     side = self.normalToCardinal(hit.normal);
 
-    console.log(sub_hit, hit.normal);
-
-    self.emit(action, voxel_target, sub_hit, side);
+    self.emit(action, voxel_target, side, sub_hit);
   });
 };
 
