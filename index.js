@@ -31,6 +31,10 @@ Reach.prototype.bindEvents = function() {
     }
 
     hit = self.game.raycastVoxels(game.cameraPosition(), game.cameraVector(), self.opts.reachDistance);
+    if (!hit) {
+      return;
+    }
+
     if (action == 'mining') {
       voxel_target = hit.voxel;
     } else if (action == 'place') {
