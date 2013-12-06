@@ -32,7 +32,7 @@ Reach.prototype.bindEvents = function() {
   var self = this;
 
   this.game.on('fire', function(target, state) {
-    var action, hit, voxel_target, sub_hit;
+    var action, hit, voxel_target, sub_hit, side;
 
     action = self.action(state);
     if (!action) {
@@ -55,8 +55,34 @@ Reach.prototype.bindEvents = function() {
     // TODO: convert to 2D taking into consideration normal
     sub_hit = [frac(hit.position[0]), frac(hit.position[1]), frac(hit.position[2])];
 
-    self.emit(action, voxel_target, sub_hit);
+    side = self.normalToCardinal(hit.normal);
+
+    console.log(sub_hit, hit.normal);
+
+    self.emit(action, voxel_target, sub_hit, side);
   });
+};
+
+Reach.prototype.normalToCardinal = function(normal) {
+  return {
+    "1,0,0": "east", // TODO: double-check these conventions
+    "-1,0,0": "west",
+    "0,1,0": "top",
+    "0,-1,0": "bottom",
+    "0,0,1": "south",
+    "0,0,-1": "north"
+  }[normal];
+};
+
+Reach.prototype.cardinalToNormal = function(direction) {
+  return {
+    "east": [1, 0, 0],
+    "west": [-1, 0, 0],
+    "top": [0, 1, 0],
+    "bottom": [0, -1, 0],
+    "south": [0, 0, 1],
+    "north": [0, 0, -1]
+  }[direction];
 };
 
 Reach.prototype.action = function(kb_state) {
