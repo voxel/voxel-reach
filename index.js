@@ -51,9 +51,17 @@ Reach.prototype.bindEvents = function() {
       voxel_target = hit.adjacent;
     }
 
-    // relative position within voxel which was hit (1..0), for example (0.5, 0.5) is center
-    // TODO: convert to 2D taking into consideration normal
+    // relative position within voxel where it was hit, range (1..0), for example (0.5, 0.5) is center:
+
+    // (1,1)--(0,1)
+    //   |      |
+    //   |      |
+    // (1,0)--(0,0)
+
     sub_hit = [frac(hit.position[0]), frac(hit.position[1]), frac(hit.position[2])];
+    // remove coordinate from direction, since it is always 0 (within epilson); convert 3D -> 2D
+    var fix = ((hit.normal.indexOf(1) + 1) || (hit.normal.indexOf(-1) + 1)) - 1; // TODO: deobfuscate
+    sub_hit.splice(fix, 1);
 
     side = self.normalToCardinal(hit.normal);
 
