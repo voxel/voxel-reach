@@ -19,11 +19,20 @@ function Reach(game, opts) {
   return this;
 }
 
+/* Get fractional part of a number
+  Math.floor(f) + frac(f) === f
+  frac(3.5) = 0.5
+  etc.
+ */
+function frac(f) {
+  return Math.abs(f % 1);
+}
+
 Reach.prototype.bindEvents = function() {
   var self = this;
 
   this.game.on('fire', function(target, state) {
-    var action, hit, voxel_target;
+    var action, hit, voxel_target, sub_hit;
 
     action = self.action(state);
     if (!action) {
@@ -35,13 +44,18 @@ Reach.prototype.bindEvents = function() {
       return;
     }
 
+    // targetted voxel
     if (action == 'mining') {
       voxel_target = hit.voxel;
     } else if (action == 'place') {
       voxel_target = hit.adjacent;
     }
 
-    self.emit(action, voxel_target);
+    // relative position within voxel which was hit (1..0), for example (0.5, 0.5) is center
+    // TODO: convert to 2D taking into consideration normal
+    sub_hit = [frac(hit.position[0]), frac(hit.position[1]), frac(hit.position[2])];
+
+    self.emit(action, voxel_target, sub_hit);
   });
 };
 
