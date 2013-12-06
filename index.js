@@ -32,7 +32,7 @@ Reach.prototype.bindEvents = function() {
   var self = this;
 
   this.game.on('fire', function(target, state) {
-    var action, hit, voxel_target, sub_hit, side;
+    var action, hit, target;
 
     action = self.action(state);
     if (!action) {
@@ -44,29 +44,36 @@ Reach.prototype.bindEvents = function() {
       return;
     }
 
-    // targetted voxel
-    if (action == 'mining') {
-      voxel_target = hit.voxel;
-    } else if (action == 'place') {
-      voxel_target = hit.adjacent;
-    }
+    target = self.specifyTarget(hit, action);
 
-    // relative position within voxel where it was hit, range (1..0), for example (0.5, 0.5) is center:
-
-    // (1,1)--(0,1)
-    //   |      |
-    //   |      |
-    // (1,0)--(0,0)
-
-    sub_hit = [frac(hit.position[0]), frac(hit.position[1]), frac(hit.position[2])];
-    // remove coordinate from direction, since it is always 0 (within epilson); convert 3D -> 2D
-    var fix = ((hit.normal.indexOf(1) + 1) || (hit.normal.indexOf(-1) + 1)) - 1; // TODO: deobfuscate
-    sub_hit.splice(fix, 1);
-
-    side = self.normalToCardinal(hit.normal);
-
-    self.emit(action, voxel_target, side, sub_hit);
+    self.emit(action, target);
   });
+};
+
+// Get the hit voxel, side, and subcoordinates
+Reach.prototype.specifyTarget = function(hit, action) {
+  var voxel, adjacent, sub, side;
+
+  if (!hit) {
+    // air
+    return false;
+  }
+
+  // relative position within voxel where it was hit, range (1..0), for example (0.5, 0.5) is center:
+
+  // (1,1)--(0,1)
+  //   |      |
+  //   |      |
+  // (1,0)--(0,0)
+
+  sub = [frac(hit.position[0]), frac(hit.position[1]), frac(hit.position[2])];
+  // remove coordinate from direction, since it is always 0 (within epilson); convert 3D -> 2D
+  var fix = ((hit.normal.indexOf(1) + 1) || (hit.normal.indexOf(-1) + 1)) - 1; // TODO: deobfuscate
+  sub.splice(fix, 1);
+
+  side = this.normalToCardinal(hit.normal);
+
+  return {voxel: hit.voxel, adjacent: hit.adjacent, side: side, sub: sub};
 };
 
 Reach.prototype.normalToCardinal = function(normal) {
@@ -96,8 +103,8 @@ Reach.prototype.action = function(kb_state) {
     // left-click (hold) = mining
     return 'mining';
   } else if (kb_state['firealt']) {
-    // right-click = place
-    return 'place';
+    // right-click = interact
+    return 'interact';
   // TODO: middle-click = pick
   } else {
     return undefined;

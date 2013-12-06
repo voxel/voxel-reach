@@ -13,14 +13,14 @@ reach, and send break/place events for the hit voxel.
 
     reach(game, {reachDistance: 8});
 
-    game.on('place', function(at) { 
-      if (at)
-        game.createBlock(at, 1);
+    game.on('interact', function(target) { 
+      if (target)
+        game.createBlock(target.adjacent, 1);
     });
 
-    game.on('mining', function(at) { 
-      if (at)
-        game.setBlock(at, 0);
+    game.on('mining', function(target) { 
+      if (target)
+        game.setBlock(target.voxel, 0);
     });
 
 ## License
