@@ -94,7 +94,7 @@ Reach.prototype.specifyTarget = function() {
 
   side = this.normalToCardinal(hit.normal);
 
-  return {voxel: hit.voxel, adjacent: hit.adjacent, side: side, sub: sub};
+  return {voxel: hit.voxel, adjacent: hit.adjacent, side: side, sub: sub, normal: hit.normal};
 };
 
 Reach.prototype.normalToCardinal = function(normal) {
