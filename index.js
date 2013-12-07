@@ -44,14 +44,14 @@ Reach.prototype.bindEvents = function() {
 
     target = self.specifyTarget();
 
-    if (action === 'mining') {
-      if (this.currentTarget && target.voxel.join(',') !== this.currentTarget.voxel.join(',')) {
+    if (action === 'mining' && this.currentTarget) {
+      // changing target while mouse held (moving mouse)
+      if (target === false || target.voxel.join(',') !== this.currentTarget.voxel.join(',')) {
         self.emit('stop mining', this.currentTarget);
         self.emit('start mining', target);
       }
-
-      this.currentTarget = target;
     }
+    this.currentTarget = target;
 
     self.emit(action, target);
   });
