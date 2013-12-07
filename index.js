@@ -14,6 +14,7 @@ function Reach(game, opts) {
   opts.mouseButton = opts.mouseButton || 0; // left
 
   this.opts = opts;
+  this.currentTarget = null;
 
   this.bindEvents();
 
@@ -43,6 +44,15 @@ Reach.prototype.bindEvents = function() {
 
     target = self.specifyTarget();
 
+    if (action === 'mining') {
+      if (this.currentTarget && target.voxel.join(',') !== this.currentTarget.voxel.join(',')) {
+        self.emit('stop mining', this.currentTarget);
+        self.emit('start mining', target);
+      }
+
+      this.currentTarget = target;
+    }
+
     self.emit(action, target);
   });
 
@@ -54,6 +64,7 @@ Reach.prototype.bindEvents = function() {
   });
   window.addEventListener('mouseup', function(ev) {
       if (ev.button !== self.opts.mouseButton)  return;
+      self.currentTarget = null;
       self.emit('stop mining', self.specifyTarget());
   });
 };
