@@ -11,6 +11,7 @@ function Reach(game, opts) {
   this.game = game;
   opts = opts || {};
   opts.reachDistance = opts.reachDistance || 8;
+  opts.mouseButton = opts.mouseButton || 0; // left
 
   this.opts = opts;
 
@@ -31,6 +32,7 @@ function frac(f) {
 Reach.prototype.bindEvents = function() {
   var self = this;
 
+  // Continuously fired events while button is held down
   this.game.on('fire', function(target, state) {
     var action, hit, target;
 
@@ -39,17 +41,28 @@ Reach.prototype.bindEvents = function() {
       return;
     }
 
-    hit = self.game.raycastVoxels(game.cameraPosition(), game.cameraVector(), self.opts.reachDistance);
-
-    target = self.specifyTarget(hit, action);
+    target = self.specifyTarget();
 
     self.emit(action, target);
   });
+
+  // Edge triggered
+  // TODO: refactor
+  window.addEventListener('mousedown', function(ev) {
+      if (ev.button !== self.opts.mouseButton) return; 
+      self.emit('start mining', self.specifyTarget());
+  });
+  window.addEventListener('mouseup', function(ev) {
+      if (ev.button !== self.opts.mouseButton)  return;
+      self.emit('stop mining', self.specifyTarget());
+  });
 };
 
-// Get the hit voxel, side, and subcoordinates
-Reach.prototype.specifyTarget = function(hit, action) {
-  var voxel, adjacent, sub, side;
+// Raytrace and get the hit voxel, side, and subcoordinates
+Reach.prototype.specifyTarget = function() {
+  var voxel, adjacent, sub, side, hit;
+
+  hit = this.game.raycastVoxels(this.game.cameraPosition(), this.game.cameraVector(), this.opts.reachDistance);
 
   if (!hit) {
     // air
@@ -104,6 +117,7 @@ Reach.prototype.action = function(kb_state) {
     return 'interact';
   // TODO: middle-click = pick
   } else {
+    console.log("undefined event!");
     return undefined;
   }
 };
