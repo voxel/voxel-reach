@@ -30,6 +30,12 @@ function frac(f) {
   return Math.abs(f % 1);
 }
 
+function targetsEqual(a, b) {
+  var strA = (a && a.voxel) ? a.voxel.join(',') : 'none';
+  var strB = (b && b.voxel) ? b.voxel.join(',') : 'none';
+  return strA === strB;
+}
+
 Reach.prototype.bindEvents = function() {
   var self = this;
 
@@ -44,9 +50,9 @@ Reach.prototype.bindEvents = function() {
 
     target = self.specifyTarget();
 
-    if (action === 'mining' && this.currentTarget) {
+    if (action === 'mining' && (this.currentTarget || target)) {
       // changing target while mouse held (moving mouse)
-      if (target === false || target.voxel.join(',') !== this.currentTarget.voxel.join(',')) {
+      if (!targetsEqual(target, this.currentTarget)) {
         self.emit('stop mining', this.currentTarget);
         self.emit('start mining', target);
       }
