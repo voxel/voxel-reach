@@ -1,5 +1,6 @@
 // # vim: set shiftwidth=2 tabstop=2 softtabstop=2 expandtab:
 
+var ever = require('ever');
 var inherits = require('inherits');
 var EventEmitter = require('events').EventEmitter;
 
@@ -16,31 +17,15 @@ function Reach(game, opts) {
   this.opts = opts;
   this.currentTarget = null;
 
-  this.bindEvents();
-
-  return this;
+  this.enable();
 }
 
-/* Get fractional part of a number
-  Math.floor(f) + frac(f) === f
-  frac(3.5) = 0.5
-  etc.
- */
-function frac(f) {
-  return Math.abs(f % 1);
-}
 
-function targetsEqual(a, b) {
-  var strA = (a && a.voxel) ? a.voxel.join(',') : 'none';
-  var strB = (b && b.voxel) ? b.voxel.join(',') : 'none';
-  return strA === strB;
-}
-
-Reach.prototype.bindEvents = function() {
+Reach.prototype.enable = function() {
   var self = this;
 
-  // Continuously fired events while button is held down
-  this.game.on('fire', function(target, state) {
+  // Continuously fired events while button is held down (from voxel-engine)
+  function fire(target, state) {
     var action, hit, target;
 
     action = self.action(state);
@@ -60,20 +45,51 @@ Reach.prototype.bindEvents = function() {
     this.currentTarget = target;
 
     self.emit(action, target);
-  });
+  }
 
   // Edge triggered
   // TODO: refactor
-  window.addEventListener('mousedown', function(ev) {
+  function mousedown(ev) {
       if (ev.button !== self.opts.mouseButton) return; 
       self.emit('start mining', self.specifyTarget());
-  });
-  window.addEventListener('mouseup', function(ev) {
-      if (ev.button !== self.opts.mouseButton)  return;
-      self.currentTarget = null;
-      self.emit('stop mining', self.specifyTarget());
-  });
+  }
+
+  function mouseup(ev) {
+    if (ev.button !== self.opts.mouseButton)  return;
+    self.currentTarget = null;
+    self.emit('stop mining', self.specifyTarget());
+  }
+
+  this.game.on('fire', fire);
+  ever(document.body).on('mousedown', mousedown);
+  ever(document.body).on('mouseup', mouseup);
+
+  // Save callbacks for removing in disable()
+  this.fire = fire;
+  this.mousedown = mousedown;
+  this.mouseup = mouseup;
 };
+
+Reach.prototype.disable = function() {
+  this.game.removeListener('fire', this.fire);
+  ever(document.body).removeListener('mousedown', this.mousedown);
+  ever(document.body).removeListener('mouseup', this.mouseup);
+};
+
+/* Get fractional part of a number
+  Math.floor(f) + frac(f) === f
+  frac(3.5) = 0.5
+  etc.
+ */
+function frac(f) {
+  return Math.abs(f % 1);
+}
+
+function targetsEqual(a, b) {
+  var strA = (a && a.voxel) ? a.voxel.join(',') : 'none';
+  var strB = (b && b.voxel) ? b.voxel.join(',') : 'none';
+  return strA === strB;
+}
 
 // Raytrace and get the hit voxel, side, and subcoordinates
 Reach.prototype.specifyTarget = function() {
