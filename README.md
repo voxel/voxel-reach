@@ -9,16 +9,16 @@ reach, and send break/place events for the hit voxel.
 
 ## Example 
 
-    var reach = require('voxel-reach');
+    var createReach = require('voxel-reach');
 
-    reach(game, {reachDistance: 8});
+    reach = createReach(game, {reachDistance: 8});
 
-    game.on('interact', function(target) { 
+    reach.on('interact', function(target) { 
       if (target)
         game.createBlock(target.adjacent, 1);
     });
 
-    game.on('mining', function(target) { 
+    reach.on('mining', function(target) { 
       if (target)
         game.setBlock(target.voxel, 0);
     });
