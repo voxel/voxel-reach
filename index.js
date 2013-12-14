@@ -93,7 +93,7 @@ function targetsEqual(a, b) {
 
 // Raytrace and get the hit voxel, side, and subcoordinates
 Reach.prototype.specifyTarget = function() {
-  var voxel, adjacent, sub, side, hit;
+  var voxel, adjacent, sub, side, hit, value;
 
   hit = this.game.raycastVoxels(this.game.cameraPosition(), this.game.cameraVector(), this.opts.reachDistance);
 
@@ -116,7 +116,9 @@ Reach.prototype.specifyTarget = function() {
 
   side = this.normalToCardinal(hit.normal);
 
-  return {voxel: hit.voxel, adjacent: hit.adjacent, side: side, sub: sub, normal: hit.normal};
+  value = this.game.getBlock(hit.voxel);
+
+  return {voxel: hit.voxel, adjacent: hit.adjacent, side: side, sub: sub, normal: hit.normal, value:value};
 };
 
 Reach.prototype.normalToCardinal = function(normal) {
