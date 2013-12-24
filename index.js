@@ -16,6 +16,7 @@ function Reach(game, opts) {
 
   this.opts = opts;
   this.currentTarget = null;
+  this.havePointer = false;
 
   this.enable();
 }
@@ -23,6 +24,14 @@ function Reach(game, opts) {
 
 Reach.prototype.enable = function() {
   var self = this;
+
+  this.game.interact.on('attain', function() {
+    self.havePointer = true;
+  });
+
+  this.game.interact.on('release', function() {
+    self.havePointer = false;
+  });
 
   // Continuously fired events while button is held down (from voxel-engine)
   function fire(target, state) {
@@ -50,11 +59,13 @@ Reach.prototype.enable = function() {
   // Edge triggered
   // TODO: refactor
   function mousedown(ev) {
-      if (ev.button !== self.opts.mouseButton) return; 
-      self.emit('start mining', self.specifyTarget());
+    if (!self.havePointer) return;
+    if (ev.button !== self.opts.mouseButton) return; 
+    self.emit('start mining', self.specifyTarget());
   }
 
   function mouseup(ev) {
+    if (!self.havePointer) return;
     if (ev.button !== self.opts.mouseButton)  return;
     self.currentTarget = null;
     self.emit('stop mining', self.specifyTarget());
