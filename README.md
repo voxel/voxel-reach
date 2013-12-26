@@ -1,7 +1,12 @@
 # voxel-reach
 
-A simple module for voxel-engine to handle fire/firealt events, raycast the voxel within
-reach, and send break/place events for the hit voxel.
+A simple module for voxel-engine to listen for fire/firealt events, raycast the voxel within
+reach, and send mining/interact events for the hit voxel.
+
+Used by:
+
+* [voxel-mine](https://github.com/deathcap/voxel-mine): handles 'mining' events
+* [voxel-use](https://github.com/deathcap/voxel-use): handles 'interact' events
 
 ## Installation
 
