@@ -12,7 +12,7 @@ function Reach(game, opts) {
   this.game = game;
   opts = opts || {};
   opts.reachDistance = opts.reachDistance || 8;
-  opts.mouseButton = opts.mouseButton || 0; // left
+  opts.mouseButton = opts.mouseButton !== undefined ? opts.mouseButton : 0; // left
 
   this.opts = opts;
   this.currentTarget = null;
