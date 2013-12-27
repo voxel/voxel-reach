@@ -6,7 +6,10 @@ var EventEmitter = require('events').EventEmitter;
 
 module.exports = function(game, opts) {
   return new Reach(game, opts);
-}
+};
+
+module.exports.pluginInfo = {
+};
 
 function Reach(game, opts) {
   this.game = game;
