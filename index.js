@@ -162,8 +162,8 @@ Reach.prototype.action = function(kb_state) {
     // left-click (hold) = mining
     return 'mining';
   } else if (kb_state['firealt']) {
-    // right-click = interact
-    return 'interact';
+    // right-click = use
+    return 'use';
   // TODO: middle-click = pick
   } else {
     console.log("undefined event!");

@@ -6,7 +6,7 @@ reach, and send mining/interact events for the hit voxel.
 Used by:
 
 * [voxel-mine](https://github.com/deathcap/voxel-mine): handles 'mining' events
-* [voxel-use](https://github.com/deathcap/voxel-use): handles 'interact' events
+* [voxel-use](https://github.com/deathcap/voxel-use): handles 'use' events
 
 ## Installation
 
@@ -18,7 +18,7 @@ Used by:
 
     reach = createReach(game, {reachDistance: 8});
 
-    reach.on('interact', function(target) { 
+    reach.on('use', function(target) { 
       if (target)
         game.createBlock(target.adjacent, 1);
     });
