@@ -1,16 +1,23 @@
 {
-    "name": "voxel-reach",
-    "description": "reach distance for block breaking and placing",
-    "version": "0.0.5",
-    "repository": {
-        "type": "git",
-        "url": "git@github.com:deathcap/voxel-reach.git"
-    },
-    "dependencies": {
-        "ever": "0.0.3",
-        "inherits": "1.0.0"
-    },
-    "peerDependencies": {
-        "voxel-engine": ">=0.19.0"
-    }
+  "name": "voxel-reach",
+  "description": "reach distance for block breaking and placing (voxel.js plugin)",
+  "version": "0.0.5",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:deathcap/voxel-reach.git"
+  },
+  "keywords": [
+    "voxel",
+    "events",
+    "mining"
+  ],
+  "dependencies": {
+    "ever": "0.0.3",
+    "inherits": "1.0.0"
+  },
+  "peerDependencies": {
+    "voxel-engine": ">=0.19.0",
+    "voxel-plugins": ">=0.1.0"
+  },
+  "license": "MIT"
 }
