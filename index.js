@@ -1,4 +1,4 @@
-// # vim: set shiftwidth=2 tabstop=2 softtabstop=2 expandtab:
+'use strict';
 
 var ever = require('ever');
 var inherits = require('inherits');
@@ -37,8 +37,9 @@ Reach.prototype.enable = function() {
   });
 
   // Continuously fired events while button is held down (from voxel-engine)
-  function fire(target, state) {
-    var action, hit, target;
+  function fire(fireTarget, state) {
+    /*jshint unused:false*/
+    var action, target;
 
     action = self.action(state);
     if (!action) {
@@ -47,14 +48,14 @@ Reach.prototype.enable = function() {
 
     target = self.specifyTarget();
 
-    if (action === 'mining' && (this.currentTarget || target)) {
+    if (action === 'mining' && (self.currentTarget || target)) {
       // changing target while mouse held (moving mouse)
-      if (!targetsEqual(target, this.currentTarget)) {
-        self.emit('stop mining', this.currentTarget);
+      if (!targetsEqual(target, self.currentTarget)) {
+        self.emit('stop mining', self.currentTarget);
         self.emit('start mining', target);
       }
     }
-    this.currentTarget = target;
+    self.currentTarget = target;
 
     self.emit(action, target);
   }
@@ -105,9 +106,9 @@ function targetsEqual(a, b) {
   return strA === strB;
 }
 
-// Raytrace and get the hit voxel, side, and subcoordinates
+// Raytrace and get the hit voxel, side, and subcoordinates for passing to events
 Reach.prototype.specifyTarget = function() {
-  var voxel, adjacent, sub, side, hit, value;
+  var sub, side, hit, value;
 
   hit = this.game.raycastVoxels(this.game.cameraPosition(), this.game.cameraVector(), this.opts.reachDistance);
 
@@ -158,15 +159,14 @@ Reach.prototype.cardinalToNormal = function(direction) {
 };
 
 Reach.prototype.action = function(kb_state) {
-  if (kb_state['fire']) {
+  if (kb_state.fire) {
     // left-click (hold) = mining
     return 'mining';
-  } else if (kb_state['firealt']) {
+  } else if (kb_state.firealt) {
     // right-click = use
     return 'use';
   // TODO: middle-click = pick
   } else {
-    console.log("undefined event!");
     return undefined;
   }
 };
