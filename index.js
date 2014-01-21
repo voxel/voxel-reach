@@ -28,13 +28,15 @@ function Reach(game, opts) {
 Reach.prototype.enable = function() {
   var self = this;
 
-  this.game.interact.on('attain', function() {
-    self.havePointer = true;
-  });
+  if (this.game.isClient) {
+    this.game.interact.on('attain', function() {
+      self.havePointer = true;
+    });
 
-  this.game.interact.on('release', function() {
-    self.havePointer = false;
-  });
+    this.game.interact.on('release', function() {
+      self.havePointer = false;
+    });
+  }
 
   // Continuously fired events while button is held down (from voxel-engine)
   function fire(fireTarget, state) {
@@ -76,8 +78,10 @@ Reach.prototype.enable = function() {
   }
 
   this.game.on('fire', fire);
-  ever(document.body).on('mousedown', mousedown);
-  ever(document.body).on('mouseup', mouseup);
+  if (this.game.isClient) {
+    ever(document.body).on('mousedown', mousedown);
+    ever(document.body).on('mouseup', mouseup);
+  }
 
   // Save callbacks for removing in disable()
   this.fire = fire;
@@ -87,8 +91,10 @@ Reach.prototype.enable = function() {
 
 Reach.prototype.disable = function() {
   this.game.removeListener('fire', this.fire);
-  ever(document.body).removeListener('mousedown', this.mousedown);
-  ever(document.body).removeListener('mouseup', this.mouseup);
+  if (this.game.isClient) {
+    ever(document.body).removeListener('mousedown', this.mousedown);
+    ever(document.body).removeListener('mouseup', this.mouseup);
+  }
 };
 
 /* Get fractional part of a number
