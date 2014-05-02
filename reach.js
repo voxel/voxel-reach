@@ -29,13 +29,23 @@ Reach.prototype.enable = function() {
   var self = this;
 
   if (this.game.isClient) {
-    this.game.interact.on('attain', function() {
-      self.havePointer = true;
-    });
+    // interact
+    if (this.game.interact) {
+      this.game.interact.on('attain', function() {
+        self.havePointer = true;
+      });
 
-    this.game.interact.on('release', function() {
-      self.havePointer = false;
-    });
+      this.game.interact.on('release', function() {
+        self.havePointer = false;
+      });
+    } else if (self.game.shell) {
+      // game-shell
+      Object.defineProperty(self, 'havePointer', {get: function() {
+        return self.game.shell.pointerLock;
+      }});
+    } else {
+      throw new Error('voxel-reach requires interact or game-shell');
+    }
   }
 
   // Continuously fired events while button is held down (from voxel-engine)
