@@ -1,7 +1,7 @@
 {
   "name": "voxel-reach",
   "description": "reach distance for block breaking and placing (voxel.js plugin)",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "main": "reach.js",
   "repository": {
     "type": "git",
