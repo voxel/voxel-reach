@@ -29,8 +29,13 @@ Reach.prototype.enable = function() {
   var self = this;
 
   if (this.game.isClient) {
-    // interact
-    if (this.game.interact) {
+    if (self.game.shell) {
+      // game-shell
+      Object.defineProperty(self, 'havePointer', {get: function() {
+        return self.game.shell.pointerLock;
+      }});
+    } else if (this.game.interact) {
+      // interact
       this.game.interact.on('attain', function() {
         self.havePointer = true;
       });
@@ -38,11 +43,6 @@ Reach.prototype.enable = function() {
       this.game.interact.on('release', function() {
         self.havePointer = false;
       });
-    } else if (self.game.shell) {
-      // game-shell
-      Object.defineProperty(self, 'havePointer', {get: function() {
-        return self.game.shell.pointerLock;
-      }});
     } else {
       throw new Error('voxel-reach requires interact or game-shell');
     }
