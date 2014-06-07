@@ -3,6 +3,7 @@
 var ever = require('ever');
 var inherits = require('inherits');
 var EventEmitter = require('events').EventEmitter;
+var fract = require('fract');
 
 module.exports = function(game, opts) {
   return new Reach(game, opts);
@@ -107,15 +108,6 @@ Reach.prototype.disable = function() {
   }
 };
 
-/* Get fractional part of a number
-  Math.floor(f) + frac(f) === f
-  frac(3.5) = 0.5
-  etc.
- */
-function frac(f) {
-  return Math.abs(f % 1);
-}
-
 function targetsEqual(a, b) {
   var strA = (a && a.voxel) ? a.voxel.join(',') : 'none';
   var strB = (b && b.voxel) ? b.voxel.join(',') : 'none';
@@ -140,7 +132,7 @@ Reach.prototype.specifyTarget = function() {
   //   |      |
   // (1,0)--(0,0)
 
-  sub = [frac(hit.position[0]), frac(hit.position[1]), frac(hit.position[2])];
+  sub = [fract(hit.position[0]), fract(hit.position[1]), fract(hit.position[2])];
   // remove coordinate from direction, since it is always 0 (within epilson); convert 3D -> 2D
   var fix = ((hit.normal.indexOf(1) + 1) || (hit.normal.indexOf(-1) + 1)) - 1; // TODO: deobfuscate
   sub.splice(fix, 1);
