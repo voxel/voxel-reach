@@ -14,7 +14,7 @@
   ],
   "dependencies": {
     "ever": "0.0.3",
-    "inherits": "1.0.0",
+    "inherits": "2.0.1",
     "fract": "^0.1.0"
   },
   "license": "MIT"
